@@ -21,7 +21,7 @@ namespace Ordering.Application.Features.Orders.Commands
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger))
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)

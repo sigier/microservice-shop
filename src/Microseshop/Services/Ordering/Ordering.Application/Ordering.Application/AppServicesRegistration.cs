@@ -13,7 +13,7 @@ namespace Ordering.Application
 {
     public static class AppServicesRegistration
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
