@@ -6,7 +6,7 @@ services:
 
 
   basketdb:
-    image: redis:alpine
+    image: redis
 
 
   discountdb:
