@@ -1,6 +1,8 @@
-﻿namespace Ordering.Application.Features.Orders.Queries
+﻿using MediatR;
+
+namespace Ordering.Application.Features.Orders.Commands
 {
-    public class OrderDto
+    public class CheckoutOrderCommand : IRequest<int>
     {
         public int Id { get; set; }
         public string UserName { get; set; }
