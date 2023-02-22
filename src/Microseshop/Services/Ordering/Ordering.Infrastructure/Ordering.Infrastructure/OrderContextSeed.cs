@@ -4,7 +4,7 @@ using Ordering.Infrastructure.Persistence;
 
 namespace Ordering.Infrastructure
 {
-    public  class OrderContextSeed
+    public class OrderContextSeed
     {
         public static async Task SeedAsync(OrderContext orderContext, ILogger<OrderContextSeed> logger)
         {
