@@ -1,7 +1,8 @@
 using Ordering.Application;
 using Ordering.Infrastructure;
+using Ordering.Infrastructure.Persistence;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 
@@ -16,11 +17,13 @@ builder.Services.AddInfrastructureServices(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using OrderContext ctx = app.Services.CreateScope().ServiceProvider.GetService<OrderContext>();
+    OrderContextSeed.SeedData(ctx);
     app.UseSwagger();
     app.UseSwaggerUI();
 }
