@@ -1,3 +1,6 @@
+using EventBus.Messages.Common;
+using MassTransit;
+using Ordering.API.EventBusConsumer;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
@@ -9,6 +12,23 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddAppServices();
 builder.Services.AddInfrastructureServices(configuration);
+
+builder.Services.AddMassTransit(config => {
+
+    config.AddConsumer<CartCheckoutConsumer>();
+
+    config.UsingRabbitMq((ctx, cfg) => {
+        cfg.Host(configuration.GetSection("EventBusSettings:HostAddress").Value);
+
+        cfg.ReceiveEndpoint(EventBusConstants.CART_CHECKOUT_QUEUE_NAME, c =>
+        {
+            c.ConfigureConsumer<CartCheckoutConsumer>(ctx);
+        });
+    });
+});
+
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<CartCheckoutConsumer>();
 
 
 
