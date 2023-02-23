@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Ordering.API": {
+    "Purchase.Aggregator": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -8,7 +8,15 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5004"
+      "applicationUrl": "http://localhost:5005"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     },
     "Docker": {
       "commandName": "Docker",
@@ -22,7 +30,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:47439",
+      "applicationUrl": "http://localhost:19375",
       "sslPort": 0
     }
   }

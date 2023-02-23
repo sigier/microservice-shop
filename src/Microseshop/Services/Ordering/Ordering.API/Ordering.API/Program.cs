@@ -1,23 +1,34 @@
-using Ordering.API.Extensions;
+using EventBus.Messages.Common;
+using MassTransit;
+using Ordering.API.EventBusConsumer;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
-IHost host = Host.CreateDefaultBuilder(args).Build();
-host.MigrateDatabase<OrderContext>((ctx, services) =>
-{
-    var logger = services.GetService<ILogger<OrderContextSeed>>();
-    OrderContextSeed
-        .SeedAsync(ctx, logger)
-        .Wait();
 
-});
 
 builder.Services.AddControllers();
 builder.Services.AddAppServices();
 builder.Services.AddInfrastructureServices(configuration);
+
+builder.Services.AddMassTransit(config => {
+
+    config.AddConsumer<CartCheckoutConsumer>();
+
+    config.UsingRabbitMq((ctx, cfg) => {
+        cfg.Host(configuration.GetSection("EventBusSettings:HostAddress").Value);
+
+        cfg.ReceiveEndpoint(EventBusConstants.CART_CHECKOUT_QUEUE_NAME, c =>
+        {
+            c.ConfigureConsumer<CartCheckoutConsumer>(ctx);
+        });
+    });
+});
+
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<CartCheckoutConsumer>();
 
 
 
@@ -26,11 +37,13 @@ builder.Services.AddInfrastructureServices(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using OrderContext ctx = app.Services.CreateScope().ServiceProvider.GetService<OrderContext>();
+    OrderContextSeed.SeedData(ctx);
     app.UseSwagger();
     app.UseSwaggerUI();
 }
